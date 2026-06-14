@@ -1,5 +1,5 @@
 import arxiv
-from langchain.schema import Document
+from langchain_core.documents import Document
 
 
 def search_arxiv_papers(query: str, max_results: int = 5) -> list[Document]:
