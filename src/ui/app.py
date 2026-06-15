@@ -48,7 +48,9 @@ if generate_btn:
         st.success("¡Contenido generado!")
         st.subheader("📄 Contenido generado")
         st.markdown(content)
-        st.code(content, language=None)
+
+        with st.expander("📋 Copiar texto plano"):
+            st.code(content, language=None)
 
         if used_rag and sources:
             st.divider()
