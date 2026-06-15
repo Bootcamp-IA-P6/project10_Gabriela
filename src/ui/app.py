@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
 import streamlit as st
-from src.generators.content_generator import generate_content
+from src.generators.content_generator import generate_content, AVAILABLE_MODELS
 
 st.set_page_config(page_title="AI Content Generator", page_icon="🤖")
 
@@ -14,14 +14,27 @@ st.divider()
 
 col1, col2 = st.columns(2)
 with col1:
-    platform = st.selectbox("Plataforma", ["blog", "twitter", "instagram", "linkedin"])
+    platform = st.selectbox("📱 Plataforma", ["blog", "twitter", "instagram", "linkedin"])
 with col2:
     audience = st.selectbox(
-        "Audiencia",
+        "👥 Audiencia",
         ["público general", "profesionales", "estudiantes", "científicos", "emprendedores"],
     )
 
-topic = st.text_input("Tema", placeholder="Ej: inteligencia artificial, física cuántica...")
+topic = st.text_input("💡 Tema", placeholder="Ej: inteligencia artificial, física cuántica...")
+
+col3, col4 = st.columns(2)
+with col3:
+    model = st.selectbox("🧠 Modelo", options=list(AVAILABLE_MODELS.keys()), format_func=lambda x: AVAILABLE_MODELS[x])
+with col4:
+    language = st.selectbox("🌍 Idioma", ["Español", "English", "Français", "Italiano"])
+
+brand_info = st.text_area(
+    "🏢 Información de tu empresa o perfil (opcional)",
+    placeholder="Ej: Somos una startup de tecnología sostenible enfocada en jóvenes de 20-30 años...",
+    height=80,
+)
+
 use_rag = st.toggle("🔬 Enriquecer con papers científicos (RAG + arXiv)", value=False)
 
 generate_btn = st.button("✨ Generar contenido", type="primary")
@@ -34,14 +47,14 @@ if generate_btn:
     else:
         with st.spinner("Generando contenido..."):
             if use_rag:
-                st.info("🔍 Buscando papers en arXiv...")
+                st.info("🔍 Buscando papers en arXiv... esto puede tardar unos segundos.")
                 from src.rag.rag_chain import run_rag_pipeline
-                result = run_rag_pipeline(topic, platform, audience)
+                result = run_rag_pipeline(topic, platform, audience, model=model, language=language, brand_info=brand_info)
                 content = result["content"]
                 sources = result["sources"]
                 used_rag = result["used_rag"]
             else:
-                content = generate_content(topic, platform, audience)
+                content = generate_content(topic, platform, audience, model=model, language=language, brand_info=brand_info)
                 sources = []
                 used_rag = False
 
