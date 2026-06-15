@@ -45,8 +45,7 @@ Escribe un post profesional sobre: {topic}
 Audiencia: {audience}
 Contexto adicional: {context}
 {brand_context}
-Idioma: {language}
-
+IMPORTANT: You MUST write the entire response in {language}. Do not use any other language.
 Tono profesional pero cercano. Incluye una reflexión y llamada a la acción.""",
 }
 
